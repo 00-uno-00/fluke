@@ -1,14 +1,14 @@
 hyperparameters:
   client:
     batch_size: 10
-    local_epochs: 5
+    local_epochs: 1
     loss: CrossEntropyLoss
     optimizer:
       lr: 0.1
     scheduler:
       gamma: 1
       step_size: 1
-  model: MNIST_CNN
+  model: MNIST_2NN
   server:
     weighted: true
 name: fluke.algorithms.fedavg.FedAVG
