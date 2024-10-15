@@ -1,0 +1,30 @@
+# For more details on how to create your config file 
+# https://makgyver.github.io/fluke/configuration.html
+data:
+  dataset:
+    name: mnist
+    path: ./data
+  distribution:
+    name: iid # dir
+    # beta: 0.3 # 0.6
+  sampling_perc: 1
+  client_split: 0.2
+  keep_test: true
+  server_test: true
+  server_split: 0.0 # not used in this case
+  uniform_test: false
+exp:
+  device: cuda
+  seed: 57
+eval:
+  task: classification
+  eval_every: 1
+  pre_fit: true
+  post_fit: true
+logger:
+  name: WandBLog
+  project: fluke_benchmarks
+protocol:
+  eligible_perc: 0.1
+  n_clients: 100
+  n_rounds: 100 #communication rounds?
