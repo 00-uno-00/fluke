@@ -1,18 +1,18 @@
 hyperparameters:
   client:
-    batch_size: 32
+    batch_size: 20
     local_epochs: 5
     loss: CrossEntropyLoss
     optimizer:
-      lr: 0.1
+      lr: 0.01
     scheduler:
       gamma: 1
       step_size: 1
   server:
     beta1: 0.9
     beta2: 0.999
-    lr: 0.01
+    lr: 0.0316228 #log10(lr) = -1.5
     mode: adam
     tau: 0.001
-  model: MNIST_2NN
+  model: ResNet18GN
 name: fluke.algorithms.fedopt.FedOpt

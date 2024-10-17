@@ -9,7 +9,7 @@ from abc import abstractmethod
 import torch
 import torch.nn as nn
 from torch.functional import F
-from torchvision.models import resnet18, resnet34, resnet50
+from torchvision.models import resnet18, resnet34, resnet50, vgg11
 
 sys.path.append(".")
 sys.path.append("..")
@@ -59,7 +59,8 @@ __all__ = [
     'Shakespeare_LSTM',
     'Scaffold_2FC_E',
     'Scaffold_2FC_D',
-    'Scaffold_2FC'
+    'Scaffold_2FC',
+    'VGG11',
 ]
 
 
@@ -1215,6 +1216,12 @@ class MoonCNN(EncoderHeadNet):
         super(MoonCNN, self).__init__(MoonCNN_E(), MoonCNN_D())
         
 class Scaffold_2FC_E(nn.Module):
+    """Encoder for the :class:`Scaffold_2FC` network.
+    
+    See Also:
+        - :class:`Scaffold_2FC`
+        - :class:`Scaffold_2FC_D`
+    """
     def __init__(self):
         super(Scaffold_2FC_E , self).__init__()
         self.output_size = 1024
@@ -1230,6 +1237,13 @@ class Scaffold_2FC_E(nn.Module):
         return x
     
 class Scaffold_2FC_D(nn.Module):
+    """Head for the :class:`Scaffold_2FC` network.
+    
+    See Also:
+        - :class:`Scaffold_2FC`
+        - :class:`Scaffold_2FC_E`
+        """
+    
     def __init__(self):
         super(Scaffold_2FC_D, self).__init__()
         self.output_size = 47
@@ -1243,6 +1257,28 @@ class Scaffold_2FC_D(nn.Module):
         x = self.fc4(x)
         return x
     
+# Scaffold: https://arxiv.org/abs/1910.06378 (EMNIST) 
 class Scaffold_2FC (EncoderHeadNet):
+    """A 2 layer fully connected network for EMNIST classification. This network attempts to recreate the architecture 
+    proposed in the [SCAFFOLD]_ paper, while there are no specific details about the architecture, we have created a 2 layer
+    fully connected network with 512 and 47 neurons in the first and second layer respectively.
+    
+    See Also:
+        - :class:`Scaffold_2FC_E`
+        - :class:`Scaffold_2FC_D`
+    
+    References:
+        .. [SCAFFOLD] Sai Praneeth Karimireddy, Satyen Kale, Mehryar Mohri, Sashank J. Reddi, Sebastian U. Stich, Ananda Theertha Suresh. SCAFFOLD: Stochastic Controlled Averaging for Federated Learning. 
+            In arXiv (2019).
+    """
+    
     def __init__(self):
         super(Scaffold_2FC, self).__init__(Scaffold_2FC_E(), Scaffold_2FC_D())
+        
+class VGG11(nn.Module):
+    def __init__(self, num_classes: int = 10):
+        super(VGG11, self).__init__()
+        self.vgg11 = vgg11(num_classes=num_classes, pretrained=False)
+
+    def forward(self, x) -> torch.Tensor:
+        return self.vgg11(x)
