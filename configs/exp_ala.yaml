@@ -1,0 +1,30 @@
+# For more details on how to create your config file 
+# https://makgyver.github.io/fluke/configuration.html
+data:
+  dataset:
+    name: cifar10
+    path: ./data
+  distribution:
+    name: dir
+    beta: 0.1
+  sampling_perc: 1
+  client_split: 0
+  keep_test: true
+  server_test: true # The original CIFAR-10 test set (without partitioning) is used to evaluate the generalization performance of the trained global model.
+  server_split: 0.0 # not used in this case
+  uniform_test: false
+exp:
+  device: cuda
+  seed: 42
+eval:
+  task: classification
+  eval_every: 1
+  pre_fit: true
+  post_fit: true
+logger:
+  name: WandBLog
+  project: fluke_benchmarks
+protocol:
+  eligible_perc: 1
+  n_clients: 20
+  n_rounds: 2000

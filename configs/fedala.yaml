@@ -1,10 +1,12 @@
 hyperparameters:
   client:
-    batch_size: 32
-    local_epochs: 5
+    batch_size: 10
+    local_epochs: 1
     loss: CrossEntropyLoss
+    ala_sample_size: 0.8 # 80% of the data is used for ALA
+    loss_window_size: 1 # what 
     optimizer:
-      lr: 0.1
+      lr: 0.005
       # momentum: 0.9
       # weight_decay: 0.0001
     scheduler:
@@ -12,5 +14,5 @@ hyperparameters:
       step_size: 1
   server:
     weighted: true
-  model: MNIST_2NN
+  model: MNIST_CNN
 name: fluke.algorithms.fedala.FedALA
