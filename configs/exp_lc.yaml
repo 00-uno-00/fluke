@@ -2,11 +2,12 @@
 # https://makgyver.github.io/fluke/configuration.html
 data:
   dataset:
-    name: femnist
+    name: cifar10
     path: ./data
   distribution:
     name: dir
-    beta: 0.5
+    beta: 0.1
+    balanced: false
   sampling_perc: 1
   client_split: 0
   keep_test: true
@@ -19,12 +20,13 @@ exp:
 eval:
   task: classification
   eval_every: 1
-  pre_fit: false
-  post_fit: false
+  pre_fit: true
+  post_fit: true
 logger:
   name: WandBLog
   project: fluke_benchmarks
+  tags: [FedLC]
 protocol:
   eligible_perc: 1
-  n_clients: 20
+  n_clients: 10
   n_rounds: 100

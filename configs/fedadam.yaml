@@ -1,7 +1,7 @@
 hyperparameters:
   client:
     batch_size: 20
-    local_epochs: 5
+    local_epochs: 1
     loss: CrossEntropyLoss
     optimizer:
       lr: 0.01

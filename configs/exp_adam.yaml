@@ -5,8 +5,8 @@ data:
     name: cifar10
     path: ./data
   distribution:
-    name: iid # dir
-    # beta: 0.3 # 0.6
+    name: dir
+    beta: 0.1
   sampling_perc: 1
   client_split: 0.2
   keep_test: true
@@ -24,7 +24,8 @@ eval:
 logger:
   name: WandBLog
   project: fluke_benchmarks
+  tags: [FedAdam]
 protocol:
   eligible_perc: 0.1
-  n_clients: 100
-  n_rounds: 4000
+  n_clients: 500
+  n_rounds: 2500 #ne richiede 4k ma mi sono stufato
