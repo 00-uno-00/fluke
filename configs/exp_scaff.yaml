@@ -2,9 +2,8 @@
 # https://makgyver.github.io/fluke/configuration.html
 data:
   dataset:
-    name: mnist
+    name: emnist
     path: ./data
-    channel_dim: 1
   distribution:
     name: iid
   sampling_perc: 1
@@ -14,13 +13,13 @@ data:
   server_split: 0.0 # not used in this case
   uniform_test: false
 exp:
-  device: cuda
+  device: cpu
   seed: 42
 eval:
   task: classification
   eval_every: 1
   pre_fit: true
-  post_fit: true
+  post_fit: false
 logger:
   name: WandBLog
   # name: WandBLog

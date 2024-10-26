@@ -43,7 +43,7 @@ class FedALAClient(Client):
                  local_epochs: int = 3,
                  ala_sample_size: float = 0.8,
                  eta: float = 1.0,
-                 conergence_threshold: float = 0.001,
+                 convergence_threshold: float = 0.001,
                  loss_window_size: int = 10,
                  **kwargs: dict[str, Any]):
         super().__init__(index=index, train_set=train_set, test_set=test_set,
@@ -51,7 +51,7 @@ class FedALAClient(Client):
                          **kwargs)
         self.hyper_params.update(ala_sample_size=ala_sample_size,
                                  eta=eta,
-                                 conergence_threshold=conergence_threshold,
+                                 convergence_threshold=convergence_threshold,
                                  loss_window_size=loss_window_size)
         self.weights = None
         self.start_phase = True
@@ -122,7 +122,7 @@ class FedALAClient(Client):
             # train the weight until convergence
             if len(losses) > self.hyper_params.loss_window_size:
                 loss_std = np.std(losses[-self.hyper_params.loss_window_size:])
-                if loss_std < self.hyper_params.conergence_threshold:
+                if loss_std < self.hyper_params.convergence_threshold:
                     converged = True
 
         self.start_phase = False

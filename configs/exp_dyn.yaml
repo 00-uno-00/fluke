@@ -4,9 +4,9 @@ data:
   dataset:
     name: mnist
     path: ./data
-    channel_dim: 1
   distribution:
-    name: iid
+    name: iid # dir
+    # beta: 0.3 # 0.6
   sampling_perc: 1
   client_split: 0.2
   keep_test: true
@@ -15,7 +15,7 @@ data:
   uniform_test: false
 exp:
   device: cuda
-  seed: 42
+  seed: 57
 eval:
   task: classification
   eval_every: 1
@@ -23,10 +23,8 @@ eval:
   post_fit: true
 logger:
   name: WandBLog
-  # name: WandBLog
   project: fluke_benchmarks
-  # entity: mlgroup
 protocol:
-  eligible_perc: 0.2
+  eligible_perc: 0.1
   n_clients: 100
-  n_rounds: 100
+  n_rounds: 100 #communication rounds?

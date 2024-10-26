@@ -1,6 +1,6 @@
 hyperparameters:
   client:
-    batch_size: 32
+    batch_size: 20
     local_epochs: 5
     loss: CrossEntropyLoss
     optimizer:
@@ -11,5 +11,5 @@ hyperparameters:
       step_size: 1
   server:
     global_step: 2
-  model: MNIST_2NN
+  model: Scaffold_2FC
 name: fluke.algorithms.scaffold.SCAFFOLD
