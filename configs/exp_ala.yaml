@@ -7,14 +7,15 @@ data:
   distribution:
     name: dir
     beta: 0.1
+    balanced: false
   sampling_perc: 1
-  client_split: 0
+  client_split: 0.25
   keep_test: true
-  server_test: true # The original CIFAR-10 test set (without partitioning) is used to evaluate the generalization performance of the trained global model.
-  server_split: 0.0 # not used in this case
+  server_test: false # The original CIFAR-10 test set (without partitioning) is used to evaluate the generalization performance of the trained global model.
+  server_split: 0.25 # not used in this case
   uniform_test: false
 exp:
-  device: cuda
+  device: cpu
   seed: 42
 eval:
   task: classification
@@ -24,6 +25,7 @@ eval:
 logger:
   name: WandBLog
   project: fluke_benchmarks
+  tags: [FedALA, pFed]
 protocol:
   eligible_perc: 1
   n_clients: 20

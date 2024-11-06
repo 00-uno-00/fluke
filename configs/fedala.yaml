@@ -9,10 +9,7 @@ hyperparameters:
       lr: 0.005
       # momentum: 0.9
       # weight_decay: 0.0001
-    scheduler:
-      gamma: 1
-      step_size: 1
   server:
     weighted: true
-  model: MNIST_CNN
+  model: CIFAR10_CNN.CIFAR_CNN
 name: fluke.algorithms.fedala.FedALA

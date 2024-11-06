@@ -37,7 +37,7 @@ __all__ = [
     "AllLayerOutputModel"
 ]
 
-STATE_DICT_KEYS_TO_IGNORE = tuple("num_batches_tracked")  # ("num_batches_tracked", "running_mean", "running_var")
+STATE_DICT_KEYS_TO_IGNORE = tuple("")  # ("num_batches_tracked", "running_mean", "running_var")
 
 
 class MMMixin:

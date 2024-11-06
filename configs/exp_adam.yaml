@@ -11,7 +11,7 @@ data:
   client_split: 0.2
   keep_test: true
   server_test: true
-  server_split: 0.0 # not used in this case
+  server_split: 0.0 
   uniform_test: false
 exp:
   device: cuda

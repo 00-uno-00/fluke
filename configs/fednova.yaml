@@ -1,14 +1,17 @@
 hyperparameters:
   client:
-    batch_size: 128
-    local_epochs: 10
+    batch_size: 32
+    local_epochs: 2
     loss: CrossEntropyLoss
-    optimizer:
-      lr: 0.01
+    mu: 0.005
     scheduler:
+      name: MultiStepLR
+      milestones: [50,75]
       gamma: 1
-      step_size: 1
+    optimizer:
+      lr: 0.02
+      momentum: 0.9
   server:
     weighted: true
-  model: ResNet18
+  model: vgg11.VGG11
 name: fluke.algorithms.fednova.FedNova

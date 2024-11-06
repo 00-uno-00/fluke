@@ -79,7 +79,10 @@ class FedNovaServer(Server):
                 # avg_model_sd[key] = clients_sd[0][key].clone()
                 avg_model_sd[key] = self.model.state_dict()[key].clone()
                 continue
-
+            if key.endswith("num_batches_tracked"):
+                mean_nbt = torch.mean(torch.Tensor([c[key] for c in clients_sd])).long()
+                avg_model_sd[key] = max(avg_model_sd[key], mean_nbt)
+                continue
             for i, client_sd in enumerate(clients_sd):
                 avg_model_sd[key] += coeff * weights[i] * \
                     torch.true_divide(client_sd[key] - avg_model_sd[key], a_i[i])

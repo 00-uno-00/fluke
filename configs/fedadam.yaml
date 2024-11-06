@@ -5,9 +5,6 @@ hyperparameters:
     loss: CrossEntropyLoss
     optimizer:
       lr: 0.01
-    scheduler:
-      gamma: 1
-      step_size: 1
   server:
     beta1: 0.9
     beta2: 0.999

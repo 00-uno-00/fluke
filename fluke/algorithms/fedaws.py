@@ -70,9 +70,9 @@ class FedAwSServer(Server):
                  last_layer_name: str = "classifier",
                  **kwargs: dict[str, Any]):
         super().__init__(model=model, test_set=test_set, clients=clients, weighted=weighted)
-        assert (last_layer_name + ".weight") in model.state_dict().keys(), \
-            f"Invalid last_layer_name: {last_layer_name}. Make sure that the last layer \
-                is named as {last_layer_name}"
+        # assert (last_layer_name + ".weight") in model.state_dict().keys(), \
+        #     f"Invalid last_layer_name: {last_layer_name}. Make sure that the last layer \
+        #         is named as {last_layer_name}"
         self.hyper_params.update(aws_lr=aws_lr,
                                  margin=margin,
                                  aws_steps=aws_steps,

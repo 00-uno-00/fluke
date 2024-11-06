@@ -11,8 +11,8 @@ hyperparameters:
     scheduler:
       gamma: 1
       step_size: 1
-    tau: 0.2 # not described in the original paper
+    tau: 0.5 # temperature
   server:
     weighted: true
-  model: MoonCNN
+  model: mooncnnv2.MoonCNN
 name: fluke.algorithms.moon.MOON

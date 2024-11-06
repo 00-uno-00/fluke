@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any, Iterable, Union
 
 import numpy as np
 import torch
+import gc
 from rich.progress import track
 from torch import device
 from torch.nn import Module
@@ -173,6 +174,8 @@ class Server(ObserverSubject):
                 self.rounds += 1
             progress_fl.remove_task(task_rounds)
             progress_client.remove_task(task_local)
+
+        gc.collect()
 
         if finalize:
             self.finalize()

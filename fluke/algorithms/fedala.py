@@ -69,6 +69,10 @@ class FedALAClient(Client):
 
         temp_model = deepcopy(self.model)
 
+        self.model.to(self.device)
+        temp_model.to(self.device)
+        server_model.to(self.device)
+
         # frozen the encoder weights
         for param in temp_model.encoder.parameters():
             param.requires_grad = False
@@ -126,6 +130,9 @@ class FedALAClient(Client):
                     converged = True
 
         self.start_phase = False
+        self.model.to("cpu")
+        temp_model.to("cpu")
+        server_model.to("cpu")
         safe_load_state_dict(self.model.head, temp_model.head.state_dict())
 
     def receive_model(self) -> None:

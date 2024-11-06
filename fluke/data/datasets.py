@@ -294,7 +294,9 @@ class Datasets:
     def CIFAR10(cls,
                 path: str = "../data",
                 transforms: Optional[callable] = None,
-                onthefly_transforms: Optional[callable] = None) -> DataContainer:
+                onthefly_transforms: Optional[callable] = None,
+                transforms_train: Optional[callable] = None,
+                transforms_test: Optional[callable] = None,) -> DataContainer:
         """
         Load the CIFAR-10 dataset. The dataset is split into training and testing sets according to
         the default split of the :class:`torchvision.datasets.CIFAR10` class.
@@ -326,8 +328,8 @@ class Datasets:
             download=True
         )
 
-        train_data = _apply_transforms(train_data, transforms)
-        test_data = _apply_transforms(test_data, transforms)
+        train_data = _apply_transforms(train_data, transforms_train)
+        test_data = _apply_transforms(test_data, transforms_test)
 
         if transforms is None:
             train_data.data = train_data.data / 255.

@@ -4,30 +4,28 @@ data:
   dataset:
     name: cifar10
     path: ./data
-    #channel_dim: 1
   distribution:
-    name: dir
-    beta: 0.1
-    balanced: false
+    name: lbl_qnt
+    class_per_client: 1
   sampling_perc: 1
   client_split: 0.2
   keep_test: true
-  server_test: true 
-  server_split: 0.2
+  server_test: true
+  server_split: 0.0 
   uniform_test: false
 exp:
   device: cuda
-  seed: 42
+  seed: 8
 eval:
   task: classification
-  eval_every: 1
+  eval_every: 10
   pre_fit: true
   post_fit: true
 logger:
-  name: WandBLog
+  name: Log
   project: fluke_benchmarks
-  tags: [FedNova]
+  tags: [FedAwS]
 protocol:
   eligible_perc: 1
-  n_clients: 16
-  n_rounds: 200
+  n_clients: 10
+  n_rounds: 1000
