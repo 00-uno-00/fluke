@@ -2,20 +2,19 @@
 # https://makgyver.github.io/fluke/configuration.html
 data:
   dataset:
-    name: cifar10
+    name: cifar100
     path: ./data
   distribution:
-    name: dir
-    beta: 0.1
+    name: iid
   sampling_perc: 1
   client_split: 0.2
   keep_test: true
   server_test: true
-  server_split: 0.0 
-  uniform_test: false
+  server_split: 0.2 
+  uniform_test: true
 exp:
   device: cuda
-  seed: 57
+  seed: 42
 eval:
   task: classification
   eval_every: 1
@@ -26,6 +25,6 @@ logger:
   project: fluke_benchmarks
   tags: [FedAdam]
 protocol:
-  eligible_perc: 0.1
-  n_clients: 500
-  n_rounds: 2500 #ne richiede 4k ma mi sono stufato
+  eligible_perc: 0.15
+  n_clients: 100
+  n_rounds: 500 #ne richiede 4k ma mi sono stufato

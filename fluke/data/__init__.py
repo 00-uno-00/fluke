@@ -681,6 +681,28 @@ class DataSplitter:
         idx_batch = [[idx_batch[i][cid_perm[j]] for j in range(n)] for i in range(2)]
         return idx_batch[0], idx_batch[1] if y_test is not None else None
 
+    def label_multinomial_skew(self,
+                                X_train: torch.Tensor,
+                                y_train: torch.Tensor,
+                                X_test: Optional[torch.Tensor],
+                                y_test: Optional[torch.Tensor],
+                                n: int,
+                                prob_vector: list[float]) -> list[torch.Tensor]:
+        """Args:
+            X_train (torch.Tensor): The training examples.
+            y_train (torch.Tensor): The training labels.
+            X_test (torch.Tensor): The test examples.
+            y_test (torch.Tensor): The test labels.
+            n (int): The number of clients upon which the examples are distributed.
+            beta (float, optional): The concentration parameter. Defaults to 0.1.
+            min_ex_class (int, optional): The minimum number of examples per class. Defaults to 2.
+            balanced (bool, optional): Whether to ensure a balanced distribution of the examples.
+
+        Returns:
+            list[torch.Tensor]: The examples' ids assignment.
+        """
+
+
     def label_pathological_skew(self,
                                 X_train: torch.Tensor,  # not used
                                 y_train: torch.Tensor,

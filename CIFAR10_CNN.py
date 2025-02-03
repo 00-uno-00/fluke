@@ -37,9 +37,9 @@ class CIFAR_CNN_D(nn.Module):
 
     def __init__(self):
         super(CIFAR_CNN_D, self).__init__()
-        self.output_size = 10
+        self.output_size = 100
         self.fc1 = nn.Linear(1600, 512)
-        self.fc2 = nn.Linear(512, 10)
+        self.fc2 = nn.Linear(512, 100)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = F.relu(self.fc1(x))

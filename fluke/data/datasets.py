@@ -330,8 +330,11 @@ class Datasets:
 
         train_data = _apply_transforms(train_data, transforms_train)
         test_data = _apply_transforms(test_data, transforms_test)
+        #if null not applied
+        #train_data = _apply_transforms(train_data, transforms) 
+        #test_data = _apply_transforms(test_data, transforms)
 
-        if transforms is None:
+        if transforms_train is None and transforms_test is None:
             train_data.data = train_data.data / 255.
             test_data.data = test_data.data / 255.
 

@@ -1,0 +1,21 @@
+hyperparameters:
+  client:
+    batch_size: 64
+    local_epochs: 10
+    loss: CrossEntropyLoss
+    optimizer:
+      lr: 0.1
+      momentum: 0.9
+      weight_decay: 0.00001
+    scheduler:
+      gamma: 1
+      step_size: 1
+  server:
+    beta1: 0
+    beta2: 1
+    lr: 1
+    mode: adam
+    tau: 1
+    weighted: true
+  model: MNIST_CNN
+name: fluke.algorithms.fedopt.FedOpt

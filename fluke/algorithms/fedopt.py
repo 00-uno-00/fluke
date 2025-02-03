@@ -41,8 +41,8 @@ class FedOptServer(Server):
         super().__init__(model=model, test_set=test_set, clients=clients, weighted=weighted)
         assert mode in {"adam", "yogi", "adagrad"}, \
             "'mode' must be one of {'adam', 'yogi', 'adagrad'}"
-        assert 0 <= beta1 < 1, "beta1 must be in [0, 1)"
-        assert 0 <= beta2 < 1, "beta2 must be in [0, 1)"
+        assert 0 <= beta1 <= 1, "beta1 must be in [0, 1)"
+        assert 0 <= beta2 <= 1, "beta2 must be in [0, 1)"
 
         self.hyper_params.update(
             mode=mode,
@@ -60,8 +60,8 @@ class FedOptServer(Server):
             if "num_batches_tracked" not in key:
                 self.m[key] = torch.zeros_like(self.model.state_dict()[key])
                 # This guarantees that the second moment is >= 0 and <= tau^2
-                self.v[key] = torch.rand_like(self.model.state_dict()[
-                                              key]) * self.hyper_params.tau ** 2
+                self.v[key] = torch.zeros_like(self.model.state_dict()[
+                                              key]) #* self.hyper_params.tau ** 2
 
     @torch.no_grad()
     def aggregate(self, eligible: Iterable[Client]) -> None:
@@ -93,7 +93,7 @@ class FedOptServer(Server):
             elif self.hyper_params.mode == "adagrad":
                 self.v[key] += diff_2
 
-            update = self.m[key] + self.hyper_params.lr * self.m[key] / \
+            update = self.hyper_params.lr * self.m[key] / \
                 (torch.sqrt(self.v[key]) + self.hyper_params.tau)
             avg_model_sd[key] = self.model.state_dict()[key] + update
 
