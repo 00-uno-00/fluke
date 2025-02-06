@@ -4,7 +4,7 @@
 yaml_file="configs/exp_dyn.yaml"
 
 # Command to run
-docker="docker run --gpus all --env EXP_CONF="exp_dyn" --env ALG_CONF="feddyn" --env MODE="federation" --env API="e75b4c11b6168eb9fc92224520b686c6522e749e" -v $(pwd)/configs:/fluke/config -v $(pwd)/data:/fluke/data 00uno00/fluke_benchmark:1.0"
+docker="docker run --gpus all --env EXP_CONF="exp_dyn" --env ALG_CONF="feddyn" --env MODE="federation" --env API="${API}" -v $(pwd)/configs:/fluke/config -v $(pwd)/data:/fluke/data 00uno00/fluke_benchmark:1.0"
 
 # Generate an array of 10 unique random seeds in the range 1 to 100
 seeds=($(shuf -i 1-100 -n 10))
