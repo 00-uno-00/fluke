@@ -356,6 +356,8 @@ class WandBLog(Log):
 
         if self.locals_eval_summary and round in self.locals_eval_summary:
             self.run.log({"locals": self.locals_eval_summary[round]}, step=round)
+        
+        self.run.finish()
 
     def save(self, path: str) -> None:
         super().save(path)

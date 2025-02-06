@@ -162,7 +162,7 @@ def main():
                 fl_algo.set_callbacks(log)
                 rich.print(Panel(Pretty(fl_algo), title="FL algorithm"))
 
-                fl_algo.run(exp_setting['n_rounds'], exp_setting['eligible_perc'])
+                fl_algo.run(exp_setting['n_rounds'], exp_setting['eligible_perc'], finalize=True)
                 print(f"Experiment {exp_setting['config_name']} with {algorithm} and {alg_setting['model']} is done.")
 
 
