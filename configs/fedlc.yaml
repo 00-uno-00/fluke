@@ -8,6 +8,9 @@ hyperparameters:
       lr: 0.0002
       # momentum: 0.9 # no decay
     tau: 0.1
+    scheduler:
+      gamma: 1
+      step_size: 1
   server:
     weighted: true
   model: cifar_fedlc_net.FedLCNet

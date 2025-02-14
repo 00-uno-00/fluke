@@ -24,6 +24,7 @@ eval:
 logger:
   name: WandBLog
   project: fluke_benchmarks
+  tags: [FedDyn]
 protocol:
   eligible_perc: 0.1
   n_clients: 100

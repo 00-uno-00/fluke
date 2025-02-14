@@ -25,6 +25,7 @@ eval:
 logger:
   name: WandBLog
   project: fluke_benchmarks
+  tags: [MOON]
 protocol:
   eligible_perc: 1
   n_clients: 10
