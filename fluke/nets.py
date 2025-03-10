@@ -1035,7 +1035,7 @@ class LeNet5_D(nn.Module):
         - :class:`LeNet5_E`
     """
 
-    def __init__(self, output_size=100):
+    def __init__(self, output_size=10):
         super(LeNet5_D, self).__init__()
         self.output_size = output_size
         self.fc = nn.Linear(400, 120)
@@ -1078,7 +1078,7 @@ class LeNet5(EncoderHeadNet):
             In arXiv https://arxiv.org/abs/2001.01523 (2020).
     """
 
-    def __init__(self, output_size=100):
+    def __init__(self, output_size=10):
         super(LeNet5, self).__init__(LeNet5_E(), LeNet5_D(output_size))
 
 

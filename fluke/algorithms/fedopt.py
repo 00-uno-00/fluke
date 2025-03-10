@@ -7,6 +7,7 @@ References:
 """
 import sys
 from collections import OrderedDict
+from copy import deepcopy
 from typing import Iterable
 
 import torch
@@ -19,7 +20,7 @@ from ..algorithms import CentralizedFL  # NOQA
 from ..client import Client  # NOQA
 from ..data import FastDataLoader  # NOQA
 from ..server import Server  # NOQA
-from ..utils.model import STATE_DICT_KEYS_TO_IGNORE  # NOQA
+from ..utils.model import get_trainable_keys  # NOQA
 
 __all__ = [
     "FedOptServer",
@@ -32,7 +33,7 @@ class FedOptServer(Server):
                  model: Module,
                  test_set: FastDataLoader,
                  clients: Iterable[Client],
-                 mode: str = "fedadam",
+                 mode: str = "adam",
                  lr: float = 0.001,
                  beta1: float = 0.9,
                  beta2: float = 0.999,
@@ -41,8 +42,8 @@ class FedOptServer(Server):
         super().__init__(model=model, test_set=test_set, clients=clients, weighted=weighted)
         assert mode in {"adam", "yogi", "adagrad"}, \
             "'mode' must be one of {'adam', 'yogi', 'adagrad'}"
-        assert 0 <= beta1 <= 1, "beta1 must be in [0, 1)"
-        assert 0 <= beta2 <= 1, "beta2 must be in [0, 1)"
+        assert 0 <= beta1 < 1, "beta1 must be in [0, 1)"
+        assert 0 <= beta2 < 1, "beta2 must be in [0, 1)"
 
         self.hyper_params.update(
             mode=mode,
@@ -54,50 +55,40 @@ class FedOptServer(Server):
         self._init_moments()
 
     def _init_moments(self):
-        self.m = OrderedDict()
-        self.v = OrderedDict()
+        self.m_t = OrderedDict()
+        self.v_t = OrderedDict()
         for key in self.model.state_dict().keys():
             if "num_batches_tracked" not in key:
-                self.m[key] = torch.zeros_like(self.model.state_dict()[key])
-                # This guarantees that the second moment is >= 0 and <= tau^2
-                self.v[key] = torch.zeros_like(self.model.state_dict()[
-                                              key]) #* self.hyper_params.tau ** 2
+                self.m_t[key] = torch.zeros_like(self.model.state_dict()[key])
+                # This guarantees that the second moment is >= 0 and >= tau^2
+                self.v_t[key] = torch.zeros_like(self.model.state_dict()[key])
 
     @torch.no_grad()
-    def aggregate(self, eligible: Iterable[Client]) -> None:
-        avg_model_sd = OrderedDict()
-        clients_sd = self.get_client_models(eligible)
+    def aggregate(self, eligible: Iterable[Client], client_models: Iterable[Module]) -> None:
+        prev_model = deepcopy(self.model)
+        super().aggregate(eligible, client_models)
+        aggregated = self.model.state_dict()
+        server_sd = prev_model.state_dict()
+        b1, b2 = self.hyper_params.beta1, self.hyper_params.beta2
+        eta, tau = self.hyper_params.lr, self.hyper_params.tau
 
-        for key in self.model.state_dict().keys():
-            if key.endswith(STATE_DICT_KEYS_TO_IGNORE):
-                # avg_model_sd[key] = deepcopy(clients_sd[0][key])
-                avg_model_sd[key] = self.model.state_dict()[key].clone()
-                continue
+        trainable_keys = get_trainable_keys(self.model)
+        d_t = {k: aggregated[k] - server_sd[k] for k in trainable_keys}
+        self.m_t = {k: b1 * self.m_t[k] + (1 - b1) * d_t[k] for k in trainable_keys}
 
-            den, diff = 0, 0
-            for i, client_sd in enumerate(clients_sd):
-                weight = 1 if not self.hyper_params.weighted else eligible[i].n_examples
-                diff += weight * (client_sd[key] - self.model.state_dict()[key])
-                den += weight
-            diff /= den
-            self.m[key] = self.hyper_params.beta1 * \
-                self.m[key] + (1 - self.hyper_params.beta1) * diff
+        if self.hyper_params.mode == "adam":
+            self.v_t = {k: b2 * self.v_t[k] + (1 - b2) * d_t[k] ** 2 for k in trainable_keys}
+        elif self.hyper_params.mode == "yogi":
+            self.v_t = {k: self.v_t[k] - (1 - b2) * (d_t[k] ** 2) *
+                        torch.sign(self.v_t[k] - d_t[k] ** 2) for k in trainable_keys}
+        elif self.hyper_params.mode == "adagrad":
+            self.v_t = {k: self.v_t[k] + d_t[k] ** 2 for k in trainable_keys}
+        else:
+            raise ValueError(f"Unknown mode: {self.hyper_params.mode}")
 
-            diff_2 = diff ** 2
-            if self.hyper_params.mode == "adam":
-                self.v[key] = self.hyper_params.beta2 * self.v[key] + \
-                    (1 - self.hyper_params.beta2) * diff_2
-            elif self.hyper_params.mode == "yogi":
-                self.v[key] -= (1 - self.hyper_params.beta2) * \
-                    diff_2 * torch.sign(self.v[key] - diff_2)
-            elif self.hyper_params.mode == "adagrad":
-                self.v[key] += diff_2
-
-            update = self.hyper_params.lr * self.m[key] / \
-                (torch.sqrt(self.v[key]) + self.hyper_params.tau)
-            avg_model_sd[key] = self.model.state_dict()[key] + update
-
-        self.model.load_state_dict(avg_model_sd)
+        update = {k: eta * self.m_t[k] / (torch.sqrt(self.v_t[k]) + tau) for k in trainable_keys}
+        agg_model_sd = {k: server_sd[k] + update[k] for k in trainable_keys}
+        self.model.load_state_dict(agg_model_sd, strict=False)
 
 
 class FedOpt(CentralizedFL):

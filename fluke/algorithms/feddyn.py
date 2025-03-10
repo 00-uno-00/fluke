@@ -55,7 +55,7 @@ def load_all_params(device: torch.device, model: torch.nn.Module, params: torch.
             params[idx:idx+length].clone().detach().reshape(weights.shape).to(device))
         idx += length
 
-    model.load_state_dict(dict_param)
+    model.load_state_dict(dict_param,False)#not able to copy mean and var for each layer, ignores said params
 
 
 class FedDynClient(Client):

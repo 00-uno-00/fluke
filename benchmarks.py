@@ -40,7 +40,7 @@ alg_settings = [
      "lr": 0.01,
      "gamma": 1,
      "step_size": 1,
-     "model": "MNIST_2NN",
+     "model": "LeNet5",
      "weighted": "true"
      },
      {"batch_size": 32, 
@@ -49,18 +49,16 @@ alg_settings = [
      "lr": 0.01,
      "gamma": 1,
      "step_size": 1,
-     "model": "MNIST_2NN",
+     "model": "LeNet5",
      "weighted": "true"
      }
 ]
 
 exp_settings = [
-    {"config_name": "Simple_dir_0.3",
-     "dataset_name": "mnist",
-     "channel_dim": 1,
+     {"config_name": "Simple",
+     "dataset_name": "svhn",
      "classes": 10,
-     "distribution_name": "dir",
-     "beta": 0.3,
+     "distribution_name": "iid", 
      "sampling_perc": 1, 
      "client_split": 0.2, 
      "keep_test": "true",  
@@ -74,25 +72,42 @@ exp_settings = [
      "eligible_perc": 0.2, 
      "n_clients": 50, 
      "n_rounds": 100},
-     {"config_name": "Simple_dir_0.5",
-     "dataset_name": "mnist",
-     "channel_dim": 1,
-     "classes": 10,
-     "distribution_name": "dir",
-     "beta": 0.5,
-     "sampling_perc": 1, 
-     "client_split": 0.2, 
-     "keep_test": "true",  
-     "server_test": "true", 
-     "server_split": 0.2, 
-     "uniform_test": "false",
-     "device": "cuda",
-     "exp_seed": 42, 
-     "exp_inmemory": "true",
-     "eval_every": 1,
-     "eligible_perc": 0.2, 
-     "n_clients": 50, 
-     "n_rounds": 100}
+    #{"config_name": "svhn_lenet_dir_0.3",
+    # "dataset_name": "svhn",
+    # "classes": 10,
+    # "distribution_name": "dir",
+    # "beta": 0.3,
+    # "sampling_perc": 1, 
+    # "client_split": 0.2, 
+    # "keep_test": "true",  
+    # "server_test": "true", 
+    # "server_split": 0.2, 
+    # "uniform_test": "false",
+    # "device": "cuda",
+    # "exp_seed": 42, 
+    # "exp_inmemory": "true",
+    # "eval_every": 1,
+    # "eligible_perc": 0.2, 
+    # "n_clients": 50, 
+    # "n_rounds": 100},
+    # {"config_name": "svhn_lenet_dir_0.5",
+    # "dataset_name": "svhn",
+    # "classes": 10,
+    # "distribution_name": "dir",
+    # "beta": 0.5,
+    # "sampling_perc": 1, 
+    # "client_split": 0.2, 
+    # "keep_test": "true",  
+    # "server_test": "true", 
+    # "server_split": 0.2, 
+    # "uniform_test": "false",
+    # "device": "cuda",
+    # "exp_seed": 42, 
+    # "exp_inmemory": "true",
+    # "eval_every": 1,
+    # "eligible_perc": 0.2, 
+    # "n_clients": 50, 
+    # "n_rounds": 100}
 ]
 
 def main():
@@ -100,7 +115,7 @@ def main():
         for exp_setting in exp_settings:
             for alg_setting in alg_settings :
                 print(f"Running experiment {exp_setting['config_name']} with {algorithm} and {alg_setting['model']}")
-                dataset = Datasets.get(exp_setting['dataset_name'], path="./data", channel_dim=int(exp_setting['channel_dim'] if alg_setting['model'] != "ResNet18" else None))
+                dataset = Datasets.get(exp_setting['dataset_name'], path="./data")
 
                 #check if both config files exist
                 if not os.path.exists(f"./configs/exp_{algorithm}.yaml") :
@@ -118,7 +133,7 @@ def main():
                     keep_test=exp_setting['keep_test'],
                     server_test=exp_setting['server_test'],
                     server_split=exp_setting['server_split'],
-                    uniform_test=exp_setting['uniform_test'],\
+                    uniform_test=exp_setting['uniform_test'],
                     #dist_args=DDict(
                     #    beta=exp_setting['beta']
                     #)
@@ -135,6 +150,10 @@ def main():
                 settings.set_evaluator(evaluator=evaluator)
 
                 # Overwrite the hyperparameters
+                cfg.protocol.eligible_perc=exp_setting['eligible_perc']
+                cfg.protocol.n_clients=exp_setting['n_clients']
+                cfg.protocol.n_rounds=exp_setting['n_rounds']
+
                 cfg.data.distribution.name=str(exp_setting['distribution_name'])
                 cfg.data.dataset.name=str(exp_setting['dataset_name'])
                 cfg.data.sampling_perc=int(exp_setting['sampling_perc'])

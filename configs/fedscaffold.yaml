@@ -10,6 +10,6 @@ hyperparameters:
       gamma: 1
       step_size: 1
   server:
-    global_step: 2
+    global_step: 1
   model: Scaffold_2FC
 name: fluke.algorithms.scaffold.SCAFFOLD

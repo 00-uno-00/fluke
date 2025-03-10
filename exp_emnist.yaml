@@ -1,0 +1,28 @@
+data:
+  dataset:
+    name: emnist
+    path: ./data
+    #channel_dim: true
+  distribution:
+    name: iid
+  sampling_perc: 1
+  client_split: 0.2
+  keep_test: true
+  server_test: true
+  server_split: 0.0 # not used in this case
+  uniform_test: false
+exp:
+  device: cuda
+  seed: 42
+  inmemory: true
+eval:
+  task: classification
+  eval_every: 1
+  pre_fit: true
+  post_fit: true
+logger:
+  name: Log
+protocol:
+  eligible_perc: 0.2
+  n_clients: 20
+  n_rounds: 50
