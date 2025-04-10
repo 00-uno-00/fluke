@@ -8,7 +8,7 @@ data:
     name: iid # dir
     # beta: 0.3 # 0.6
   sampling_perc: 1
-  client_split: 0.2
+  client_split: 0.1
   keep_test: true
   server_test: true
   server_split: 0.0 # not used in this case
@@ -28,4 +28,4 @@ logger:
 protocol:
   eligible_perc: 0.1
   n_clients: 100
-  n_rounds: 100 #communication rounds?
+  n_rounds: 100

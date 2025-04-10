@@ -56,7 +56,7 @@ alg_settings = [
 
 exp_settings = [
      {"config_name": "Simple",
-     "dataset_name": "svhn",
+     "dataset_name": "cifar10",
      "classes": 10,
      "distribution_name": "iid", 
      "sampling_perc": 1, 
